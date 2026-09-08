@@ -14,6 +14,15 @@ cc_library_shared {
     static_libs: ["libavcenc"],
     srcs: ["SoftAVCEnc.cpp"],
 
+    cflags: [
+        // [A37] Codec OMX software ini dikembalikan apa adanya dari arsip, dan
+        // clang r596125 menolak variabel yang ditulis tapi tidak dibaca -- pola
+        // lazim di kode era itu (mis. nilai balik ivdec_api_function yang
+        // sengaja diabaikan). Ditekan per modul, mengikuti pola
+        // -Wno-unused-variable di modul codec tetangga.
+        "-Wno-unused-but-set-variable",
+    ],
+
     sanitize: {
         misc_undefined: [
             "signed-integer-overflow",

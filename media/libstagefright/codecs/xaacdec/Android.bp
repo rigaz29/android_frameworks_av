@@ -16,7 +16,13 @@ cc_library_shared {
     ],
 
     cflags: [
-        "-DENABLE_MPEG_D_DRC"
+        "-DENABLE_MPEG_D_DRC",
+        // [A37] Codec OMX software ini dikembalikan apa adanya dari arsip, dan
+        // clang r596125 menolak variabel yang ditulis tapi tidak dibaca -- pola
+        // lazim di kode era itu (mis. nilai balik ivdec_api_function yang
+        // sengaja diabaikan). Ditekan per modul, sejalan dengan
+        // -Wno-unused-variable yang memang sudah ada di sini.
+        "-Wno-unused-but-set-variable",
     ],
 
     sanitize: {

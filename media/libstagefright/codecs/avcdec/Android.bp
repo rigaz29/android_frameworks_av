@@ -16,6 +16,17 @@ cc_library_shared {
 
     cflags: [
         "-Wall",
+        // [A37] Codec OMX software ini dikembalikan apa adanya dari arsip
+        // (Revert "Remove source code of all the OMX software codec plugins"),
+        // dan clang r596125 menolak variabel yang ditulis tapi tidak dibaca --
+        // pola yang lazim di kode era itu, mis. nilai balik ivdec_api_function
+        // yang sengaja diabaikan.
+        //
+        // Menekan warning per modul, BUKAN menyunting isinya: percobaan
+        // menyunting satu per satu justru MERUSAK SoftHEVC.cpp, karena sisipan
+        // otomatis mendarat di tengah pemanggilan fungsi multi-baris. Untuk
+        // kode arsip yang tidak kita rawat, risikonya tidak sepadan.
+        "-Wno-unused-but-set-variable",
     ],
 
     version_script: "exports.lds",
