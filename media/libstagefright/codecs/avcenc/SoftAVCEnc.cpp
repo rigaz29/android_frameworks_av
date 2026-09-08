@@ -733,9 +733,10 @@ OMX_ERRORTYPE SoftAVC::initEncoder() {
 
     /* Allocating Memory for Mem Records */
     {
-        WORD32 total_size;
+        // [A37] total_size dibuang: hanya diakumulasi lalu tidak pernah dibaca.
+        // Clang r596125 menolaknya dengan -Werror,-Wunused-but-set-variable.
+        // Menghapusnya lebih tepat daripada melonggarkan warning seluruh modul.
         iv_mem_rec_t *ps_mem_rec;
-        total_size = 0;
         ps_mem_rec = mMemRecords;
 
         for (size_t i = 0; i < mNumMemRecords; i++) {
@@ -749,8 +750,6 @@ OMX_ERRORTYPE SoftAVC::initEncoder() {
                 return OMX_ErrorUndefined;
 
             }
-            total_size += ps_mem_rec->u4_mem_size;
-
             ps_mem_rec++;
         }
     }
